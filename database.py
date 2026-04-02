@@ -9,8 +9,15 @@ from datetime import datetime
 
 def get_db_connection():
     """获取数据库连接"""
+    db_url = os.getenv("DATABASE_URL")
+    if not db_url:
+        raise RuntimeError(
+            "❌ DATABASE_URL 环境变量未设置！\n"
+            "请在 Railway 项目 Settings → Environment Variables 中添加：\n"
+            "  DATABASE_URL = postgresql://neondb_owner:xxx@ep-xxx/neondb?sslmode=require"
+        )
     conn = psycopg2.connect(
-        os.getenv("DATABASE_URL"),
+        db_url,
         cursor_factory=RealDictCursor
     )
     return conn
